@@ -6,16 +6,14 @@ module Home.Toast exposing
     , toastyConfig
     , toastyView
     )
-import Http
-import Home.Rest as Rest
-import Home.Types as Types
+
 import Html.Attributes as HA
 import Html.Styled exposing (Html, fromUnstyled)
-import RemoteData
+import Http
+import RemoteData exposing (RemoteData(..), WebData)
 import Toasty
 import Toasty.Defaults
-import RemoteData exposing (RemoteData(..), WebData)
-import Http.Detailed
+
 
 addToast :
     a
@@ -145,6 +143,7 @@ headAndTail len txt =
                 (len // 2) - 1
         in
         String.left mid txt ++ "..." ++ String.right mid txt
+
 
 buildErrorMessage : Http.Error -> String
 buildErrorMessage httpError =

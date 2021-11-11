@@ -1,15 +1,14 @@
 module Home.View exposing (..)
 
-import Css
 import Dict
 import Home.State exposing (..)
 import Home.Types exposing (..)
 import Html as H
 import Html.Styled as Styled exposing (..)
-import Html.Styled.Attributes as StyledAttribs exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import RemoteData exposing (RemoteData, WebData)
-import Select exposing (MenuItem, initState, selectIdentifier, update)
+import RemoteData
+import Select exposing (selectIdentifier)
 
 
 selectedPackageToMenuItem : Package -> Select.MenuItem Package
@@ -41,18 +40,23 @@ renderSelect model =
 view : Model -> H.Html Msg
 view model =
     toUnstyled <|
-        case model.reqPackage of
-            RemoteData.NotAsked ->
-                text ""
+        div
+            [ class "container"
+            ]
+            [ renderSelect model
+            , case model.reqPackage of
+                RemoteData.NotAsked ->
+                    text ""
 
-            RemoteData.Loading ->
-                h3 [class "loader"] [ text "Loading..." ]
+                RemoteData.Loading ->
+                    h3 [ class "loader" ] []
 
-            RemoteData.Success resp ->
-                viewPackageDetails model resp
+                RemoteData.Success resp ->
+                    viewPackageDetails resp
 
-            RemoteData.Failure httpError ->
-                viewError (buildErrorMessage httpError)
+                RemoteData.Failure httpError ->
+                    viewError (buildErrorMessage httpError)
+            ]
 
 
 viewError : String -> Html Msg
@@ -67,40 +71,31 @@ viewError errorMessage =
         ]
 
 
-viewPackageDetails : Model -> PackageInfo -> Html Msg
-viewPackageDetails model resp =
-    let
-        _ =
-            Debug.log "model" model.reqPackage
-    in
-    div
-        [ class "container"
-        ]
-        [ renderSelect model
-        , ul []
-            [ li [ class "list" ]
-                [ p []
-                    [ span [ class "bold" ] [ text "Package Name:" ]
-                    , span [] [ text resp.name ]
-                    ]
+viewPackageDetails : PackageInfo -> Html Msg
+viewPackageDetails resp =
+    ul []
+        [ li [ class "list" ]
+            [ p []
+                [ span [ class "bold" ] [ text "Package Name:" ]
+                , span [] [ text resp.name ]
                 ]
-            , li [ class "list" ]
-                [ p []
-                    [ span [ class "bold" ] [ text ("Related Links:" ++ "HomePage:") ]
-                    , span [] [ text resp.projectUrls.homePage ]
-                    ]
+            ]
+        , li [ class "list" ]
+            [ p []
+                [ span [ class "bold" ] [ text ("Related Links:" ++ "HomePage:") ]
+                , span [] [ text resp.projectUrls.homePage ]
                 ]
-            , li [ class "list" ]
-                [ p []
-                    [ span [ class "bold" ] [ text "Dependencies:" ]
-                    , span [] [ text <| String.join ", " resp.dependencies ]
-                    ]
+            ]
+        , li [ class "list" ]
+            [ p []
+                [ span [ class "bold" ] [ text "Dependencies:" ]
+                , span [] [ text <| String.join ", " resp.dependencies ]
                 ]
-            , li [ class "list" ]
-                [ p []
-                    [ span [class "bold"] [ text "Versions:" ]
-                    , span [] [ text <| String.join ", " (Dict.keys resp.releases) ]
-                    ]
+            ]
+        , li [ class "list" ]
+            [ p []
+                [ span [ class "bold" ] [ text "Versions:" ]
+                , span [] [ text <| String.join ", " (Dict.keys resp.releases) ]
                 ]
             ]
         ]

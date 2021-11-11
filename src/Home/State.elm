@@ -1,12 +1,13 @@
-module Home.State exposing (init, update,buildErrorMessage)
+module Home.State exposing (buildErrorMessage, init, update)
 
 import Home.Rest exposing (..)
-import Home.Toast exposing (addToast, toastFailure, toastResult)
+import Home.Toast exposing (toastResult)
 import Home.Types exposing (..)
 import Http
 import Maybe.Extra as Maybe
 import RemoteData
 import Select exposing (Action(..))
+import Task
 import Toasty
 import Toasty.Defaults
 
@@ -27,8 +28,7 @@ init _ =
             }
     in
     ( model
-    , Cmd.batch
-        [ httpCommand ]
+    , Cmd.none
     )
 
 
@@ -36,7 +36,20 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         FetchPackage ->
-            ( { model | reqPackage = RemoteData.Loading }, httpCommand )
+            let
+                packageName =
+                    Maybe.map showPackage model.selectedPackage
+            in
+            ( { model
+                | reqPackage =
+                    if Maybe.isNothing packageName then
+                        RemoteData.NotAsked
+
+                    else
+                        RemoteData.Loading
+              }
+            , Maybe.withDefault Cmd.none <| Maybe.map httpCommand packageName
+            )
 
         ResponseOnFetchPackageName response ->
             ( { model | reqPackage = response }, Cmd.none )
@@ -53,15 +66,26 @@ update msg model =
                 updatedSelectedItem =
                     case maybeAction of
                         Just (Select.Select i) ->
-                            Just i |> Debug.log "Selected"
-                        
+                            Just i
+
                         Just Select.ClearSingleSelectItem ->
                             Nothing
 
                         _ ->
                             model.selectedPackage
             in
-            ( { model | selectState = selectState, selectedPackage = updatedSelectedItem }, Cmd.map SelectPackage cmds )
+            ( { model | selectState = selectState, selectedPackage = updatedSelectedItem }
+            , Cmd.batch
+                [ Cmd.map SelectPackage cmds
+                , run FetchPackage
+                ]
+            )
+
+
+run : msg -> Cmd msg
+run m =
+    Task.perform (always m) (Task.succeed ())
+
 
 buildErrorMessage : Http.Error -> String
 buildErrorMessage httpError =
