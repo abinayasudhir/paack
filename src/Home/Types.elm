@@ -22,7 +22,6 @@ type Msg
     | ToastyMsg (Toasty.Msg Toasty.Defaults.Toast)
 
 
-type alias Release = Dict.Dict String Decode.Value
     
 
 type Package
@@ -41,7 +40,7 @@ type alias RequiresDist =
 
 type alias PackageInfo =
     { name : PackageName
-    , releases : Release
+    , releases : Dict.Dict String Decode.Value
     , projectUrls : ProjectUrl
     , dependencies : List RequiresDist
     }
@@ -55,6 +54,3 @@ type alias Model =
     , toasties : Toasty.Stack Toasty.Defaults.Toast
     }
 
-
-type alias PackageList =
-    List PackageName

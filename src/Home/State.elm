@@ -1,4 +1,4 @@
-module Home.State exposing (init, update)
+module Home.State exposing (init, update,buildErrorMessage)
 
 import Home.Rest exposing (..)
 import Home.Toast exposing (addToast, toastFailure, toastResult)
@@ -54,6 +54,9 @@ update msg model =
                     case maybeAction of
                         Just (Select.Select i) ->
                             Just i |> Debug.log "Selected"
+                        
+                        Just Select.ClearSingleSelectItem ->
+                            Nothing
 
                         _ ->
                             model.selectedPackage
