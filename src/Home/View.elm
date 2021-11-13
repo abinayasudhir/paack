@@ -53,29 +53,21 @@ viewError errorMessage =
 
 viewPackageDetails : PackageInfo -> Html Msg
 viewPackageDetails resp =
-    ul []
-        [ li [ class "list" ]
-            [ p []
-                [ span [ class "bold" ] [ text "Package Name : " ]
-                , span [] [ text resp.name ]
-                ]
+    div []
+        [ p []
+            [ span [ class "bold" ] [ text "Package Name : " ]
+            , span [] [ text resp.name ]
             ]
-        , li [ class "list" ]
-            [ p []
-                [ span [ class "bold" ] [ text "Related Links" ]
-                ]
-            , ul [] <| List.map (\( k, v ) -> li [ class "list" ] [ text k, text " : ", text v ]) (Dict.toList resp.projectUrls)
+        , p []
+            [ span [ class "bold" ] [ text "Related Links" ]
             ]
-        , li [ class "list" ]
-            [ p []
-                [ span [ class "bold" ] [ text "Dependencies : " ]
-                ]
-            , ul [] <| List.map (\dep -> li [ class "list" ] [ text dep ]) resp.dependencies
+        , ul [] <| List.map (\( k, v ) -> li [ class "list" ] [ text k, text " : ", text v ]) (Dict.toList resp.projectUrls)
+        , p []
+            [ span [ class "bold" ] [ text "Dependencies : " ]
             ]
-        , li [ class "list" ]
-            [ p []
-                [ span [ class "bold" ] [ text "Versions : " ]
-                ]
+        , ul [] <| List.map (\dep -> li [ class "list" ] [ text dep ]) resp.dependencies
+        , p []
+            [ span [ class "bold" ] [ text "Versions : " ]
             ]
         , ul [] <| List.map (\version -> li [ class "list" ] [ text version ]) (Dict.keys resp.releases)
         ]
