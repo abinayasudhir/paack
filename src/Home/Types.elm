@@ -1,14 +1,9 @@
 module Home.Types exposing (..)
 
 import Dict
+import Dropdown
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
-import Select exposing (Action(..))
-import Dropdown
-
-
-type alias Url =
-    String
 
 
 type alias PackageName =
@@ -16,36 +11,13 @@ type alias PackageName =
 
 
 type Msg
-    = FetchPackage
-    | SelectPackage (Select.Msg Package)
-    | ResponseOnFetchPackageName (WebData PackageInfo)
-    -- | ChoosePackage Package
+    = ResponseOnFetchPackageName (WebData PackageInfo)
     | OptionPicked (Maybe PackageName)
     | DropdownMsg (Dropdown.Msg PackageName)
-    | NoOp
-
-
-type Package
-    = Elm
-    | Rust
-    | Go
-
-
-showPackage : Package -> String
-showPackage package =
-    case package of
-        Elm ->
-            "elm"
-
-        Rust ->
-            "RUST"
-
-        Go ->
-            "go"
 
 
 type alias ProjectUrl =
-    { homePage : String }
+    Dict.Dict String String
 
 
 type alias Dependency =
@@ -61,8 +33,7 @@ type alias PackageInfo =
 
 
 type alias Model =
-    { selectState : Select.State                              -- to be removed
-    , packages : List PackageName
+    { packages : List PackageName
     , selectedPackage : Maybe PackageName
     , dropdownState : Dropdown.State PackageName
     , reqPackage : WebData PackageInfo

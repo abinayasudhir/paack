@@ -10,19 +10,6 @@ import Html.Styled as Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import RemoteData
-import Select exposing (selectIdentifier)
-
-
-
--- selectedPackageToMenuItem : Package -> Select.MenuItem Package
--- selectedPackageToMenuItem package =
---     case package of
---         Elm ->
---             { item = Elm, label = "Elm" }
---         Rust ->
---             { item = Rust, label = "Rust" }
---         Go ->
---             { item = Go, label = "Go" }
 
 
 view : Model -> H.Html Msg
@@ -32,8 +19,7 @@ view model =
             [ class "container"
             ]
             [ E.column [ E.padding 20, E.spacing 20 ]
-                [ E.el [] <| E.text <| "Selected Option: " ++ (model.selectedPackage |> Maybe.withDefault "Nothing")
-                , Dropdown.view dropdownConfig model model.dropdownState
+                [ Dropdown.view dropdownConfig model model.dropdownState
                 ]
                 |> E.layout []
                 |> Styled.fromUnstyled
@@ -75,20 +61,20 @@ viewPackageDetails resp =
             ]
         , li [ class "list" ]
             [ p []
-                [ span [ class "bold" ] [ text ("Related Links : " ++ "HomePage : ") ]
-                , span [] [ text resp.projectUrls.homePage ]
+                [ span [ class "bold" ] [ text "Related Links" ]
                 ]
+            , ul [] <| List.map (\( k, v ) -> li [ class "list" ] [ text k, text " : ", text v ]) (Dict.toList resp.projectUrls)
             ]
         , li [ class "list" ]
             [ p []
                 [ span [ class "bold" ] [ text "Dependencies : " ]
-                , span [] [ text <| String.join ", " resp.dependencies ]
                 ]
+            , ul [] <| List.map (\dep -> li [ class "list" ] [ text dep ]) resp.dependencies
             ]
         , li [ class "list" ]
             [ p []
                 [ span [ class "bold" ] [ text "Versions : " ]
-                , span [] [ text <| String.join ", " (Dict.keys resp.releases) ]
                 ]
             ]
+        , ul [] <| List.map (\version -> li [ class "list" ] [ text version ]) (Dict.keys resp.releases)
         ]
