@@ -18,6 +18,7 @@ type Msg
     = FetchPackage
     | SelectPackage (Select.Msg Package)
     | ResponseOnFetchPackageName (WebData PackageInfo)
+    | ChoosePackage Package
 
 
 type Package

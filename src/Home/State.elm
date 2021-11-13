@@ -31,6 +31,9 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ChoosePackage package ->
+            ( { model | selectedPackage = Just package }, httpCommand <| showPackage package )
+
         FetchPackage ->
             let
                 packageName =

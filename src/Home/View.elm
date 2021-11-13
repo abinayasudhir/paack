@@ -43,20 +43,22 @@ view model =
         div
             [ class "container"
             ]
-            [ renderSelect model
-            , case model.reqPackage of
-                RemoteData.NotAsked ->
-                    text ""
+        <|
+            List.map (\package -> span [] [ a [ onClick <| ChoosePackage package ] [ text <| showPackage package ] ]) [ Elm, Go, Rust ]
+                ++ [ renderSelect model
+                   , case model.reqPackage of
+                        RemoteData.NotAsked ->
+                            text ""
 
-                RemoteData.Loading ->
-                    h3 [ class "loader" ] []
+                        RemoteData.Loading ->
+                            h3 [ class "loader" ] []
 
-                RemoteData.Success resp ->
-                    viewPackageDetails resp
+                        RemoteData.Success resp ->
+                            viewPackageDetails resp
 
-                RemoteData.Failure httpError ->
-                    viewError (buildErrorMessage httpError)
-            ]
+                        RemoteData.Failure httpError ->
+                            viewError (buildErrorMessage httpError)
+                   ]
 
 
 viewError : String -> Html Msg
