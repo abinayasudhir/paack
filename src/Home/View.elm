@@ -30,7 +30,7 @@ renderSelect model =
         Select.view
             ((Select.single <| Maybe.map selectedPackageToMenuItem model.selectedPackage)
                 |> Select.state model.selectState
-                |> Select.menuItems model.items
+                |> Select.menuItems model.packages
                 |> Select.placeholder "Please select any package"
                 |> Select.clearable True
             )
@@ -76,25 +76,25 @@ viewPackageDetails resp =
     ul []
         [ li [ class "list" ]
             [ p []
-                [ span [ class "bold" ] [ text "Package Name:" ]
+                [ span [ class "bold" ] [ text "Package Name : " ]
                 , span [] [ text resp.name ]
                 ]
             ]
         , li [ class "list" ]
             [ p []
-                [ span [ class "bold" ] [ text ("Related Links:" ++ "HomePage:") ]
+                [ span [ class "bold" ] [ text ("Related Links : " ++ "HomePage : ") ]
                 , span [] [ text resp.projectUrls.homePage ]
                 ]
             ]
         , li [ class "list" ]
             [ p []
-                [ span [ class "bold" ] [ text "Dependencies:" ]
+                [ span [ class "bold" ] [ text "Dependencies : " ]
                 , span [] [ text <| String.join ", " resp.dependencies ]
                 ]
             ]
         , li [ class "list" ]
             [ p []
-                [ span [ class "bold" ] [ text "Versions:" ]
+                [ span [ class "bold" ] [ text "Versions : " ]
                 , span [] [ text <| String.join ", " (Dict.keys resp.releases) ]
                 ]
             ]

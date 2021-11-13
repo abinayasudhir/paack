@@ -57,7 +57,7 @@ type alias PackageInfo =
 
 type alias Model =
     { selectState : Select.State
-    , items : List (Select.MenuItem Package)
+    , packages : List (Select.MenuItem Package)
     , selectedPackage : Maybe Package
     , reqPackage : WebData PackageInfo
     }

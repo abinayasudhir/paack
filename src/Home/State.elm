@@ -14,7 +14,7 @@ init _ =
     let
         model =
             { selectState = Select.initState
-            , items =
+            , packages =
                 [ { item = Elm, label = "Elm" }
                 , { item = Rust, label = "Rust" }
                 , { item = Go, label = "Go" }
