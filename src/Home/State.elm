@@ -1,6 +1,5 @@
 module Home.State exposing (buildErrorMessage, dropdownConfig, init, update)
 
-import Css exposing (cursor)
 import Dropdown
 import Element exposing (..)
 import Element.Background as Background
@@ -73,7 +72,7 @@ dropdownConfig =
         itemToPrompt item =
             text item
 
-        itemToElement selected highlighted i =
+        itemToElement selected _ i =
             let
                 bgColor =
                     if selected then
