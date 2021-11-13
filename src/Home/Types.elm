@@ -10,16 +10,6 @@ type alias PackageName =
     String
 
 
-type Msg
-    = ResponseOnFetchPackageName (WebData PackageInfo)
-    | OptionPicked (Maybe PackageName)
-    | DropdownMsg (Dropdown.Msg PackageName)
-
-
-type alias ProjectUrl =
-    Dict.Dict String String
-
-
 type alias Dependency =
     String
 
@@ -27,7 +17,7 @@ type alias Dependency =
 type alias PackageInfo =
     { name : PackageName
     , releases : Dict.Dict String Decode.Value
-    , projectUrls : ProjectUrl
+    , projectUrls : Dict.Dict String String
     , dependencies : List Dependency
     }
 
@@ -38,3 +28,9 @@ type alias Model =
     , dropdownState : Dropdown.State PackageName
     , reqPackage : WebData PackageInfo
     }
+
+
+type Msg
+    = ResponseOnFetchPackageName (WebData PackageInfo)
+    | OptionPicked (Maybe PackageName)
+    | DropdownMsg (Dropdown.Msg PackageName)

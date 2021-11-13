@@ -1,4 +1,4 @@
-module Home.Rest exposing (..)
+module Home.Rest exposing (httpCommand)
 
 import Home.Types exposing (..)
 import Http
@@ -18,7 +18,6 @@ packageInfoDecoder =
 
 httpCommand : PackageName -> Cmd Msg
 httpCommand name =
-    -- "https://pypi.org/pypi/RUST/json"
     Http.get
         { url = "https://pypi.org/pypi/" ++ name ++ "/json"
         , expect =

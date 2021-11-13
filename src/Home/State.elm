@@ -1,4 +1,4 @@
-module Home.State exposing (buildErrorMessage, dropdownConfig, init, update)
+module Home.State exposing (dropdownConfig, init, update)
 
 import Dropdown
 import Element exposing (..)
@@ -7,7 +7,6 @@ import Element.Border as Border
 import Element.Font as Font
 import Home.Rest exposing (..)
 import Home.Types exposing (..)
-import Http
 import Maybe.Extra as Maybe
 import RemoteData
 
@@ -107,22 +106,3 @@ dropdownConfig =
         |> Dropdown.withSelectAttributes selectAttrs
         |> Dropdown.withListAttributes listAttrs
         |> Dropdown.withSearchAttributes searchAttrs
-
-
-buildErrorMessage : Http.Error -> String
-buildErrorMessage httpError =
-    case httpError of
-        Http.BadUrl message ->
-            message
-
-        Http.Timeout ->
-            "Server is taking too long to respond. Please try again later."
-
-        Http.NetworkError ->
-            "Unable to reach server."
-
-        Http.BadStatus statusCode ->
-            "Request failed with status code: " ++ String.fromInt statusCode
-
-        Http.BadBody message ->
-            message

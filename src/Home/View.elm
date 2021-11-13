@@ -1,4 +1,4 @@
-module Home.View exposing (..)
+module Home.View exposing (buildErrorMessage, view)
 
 import Dict
 import Dropdown
@@ -9,6 +9,7 @@ import Html as H
 import Html.Styled as Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
+import Http
 import RemoteData
 
 
@@ -78,3 +79,22 @@ viewPackageDetails resp =
             ]
         , ul [] <| List.map (\version -> li [ class "list" ] [ text version ]) (Dict.keys resp.releases)
         ]
+
+
+buildErrorMessage : Http.Error -> String
+buildErrorMessage httpError =
+    case httpError of
+        Http.BadUrl message ->
+            message
+
+        Http.Timeout ->
+            "Server is taking too long to respond. Please try again later."
+
+        Http.NetworkError ->
+            "Unable to reach server."
+
+        Http.BadStatus statusCode ->
+            "Request failed with status code: " ++ String.fromInt statusCode
+
+        Http.BadBody message ->
+            message
