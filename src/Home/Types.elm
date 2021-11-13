@@ -4,6 +4,7 @@ import Dict
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
 import Select exposing (Action(..))
+import Dropdown
 
 
 type alias Url =
@@ -18,7 +19,10 @@ type Msg
     = FetchPackage
     | SelectPackage (Select.Msg Package)
     | ResponseOnFetchPackageName (WebData PackageInfo)
-    | ChoosePackage Package
+    -- | ChoosePackage Package
+    | OptionPicked (Maybe PackageName)
+    | DropdownMsg (Dropdown.Msg PackageName)
+    | NoOp
 
 
 type Package
@@ -57,8 +61,9 @@ type alias PackageInfo =
 
 
 type alias Model =
-    { selectState : Select.State
-    , packages : List (Select.MenuItem Package)
-    , selectedPackage : Maybe Package
+    { selectState : Select.State                              -- to be removed
+    , packages : List PackageName
+    , selectedPackage : Maybe PackageName
+    , dropdownState : Dropdown.State PackageName
     , reqPackage : WebData PackageInfo
     }

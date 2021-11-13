@@ -1,6 +1,8 @@
 module Home.View exposing (..)
 
 import Dict
+import Dropdown
+import Element as E
 import Home.State exposing (..)
 import Home.Types exposing (..)
 import Html as H
@@ -11,30 +13,16 @@ import RemoteData
 import Select exposing (selectIdentifier)
 
 
-selectedPackageToMenuItem : Package -> Select.MenuItem Package
-selectedPackageToMenuItem package =
-    case package of
-        Elm ->
-            { item = Elm, label = "Elm" }
 
-        Rust ->
-            { item = Rust, label = "Rust" }
-
-        Go ->
-            { item = Go, label = "Go" }
-
-
-renderSelect : Model -> Styled.Html Msg
-renderSelect model =
-    Styled.map SelectPackage <|
-        Select.view
-            ((Select.single <| Maybe.map selectedPackageToMenuItem model.selectedPackage)
-                |> Select.state model.selectState
-                |> Select.menuItems model.packages
-                |> Select.placeholder "Please select any package"
-                |> Select.clearable True
-            )
-            (selectIdentifier "PackageName")
+-- selectedPackageToMenuItem : Package -> Select.MenuItem Package
+-- selectedPackageToMenuItem package =
+--     case package of
+--         Elm ->
+--             { item = Elm, label = "Elm" }
+--         Rust ->
+--             { item = Rust, label = "Rust" }
+--         Go ->
+--             { item = Go, label = "Go" }
 
 
 view : Model -> H.Html Msg
@@ -43,22 +31,25 @@ view model =
         div
             [ class "container"
             ]
-        <|
-            List.map (\package -> span [] [ a [ onClick <| ChoosePackage package ] [ text <| showPackage package ] ]) [ Elm, Go, Rust ]
-                ++ [ renderSelect model
-                   , case model.reqPackage of
-                        RemoteData.NotAsked ->
-                            text ""
+            [ E.column [ E.padding 20, E.spacing 20 ]
+                [ E.el [] <| E.text <| "Selected Option: " ++ (model.selectedPackage |> Maybe.withDefault "Nothing")
+                , Dropdown.view dropdownConfig model model.dropdownState
+                ]
+                |> E.layout []
+                |> Styled.fromUnstyled
+            , case model.reqPackage of
+                RemoteData.NotAsked ->
+                    text ""
 
-                        RemoteData.Loading ->
-                            h3 [ class "loader" ] []
+                RemoteData.Loading ->
+                    h3 [ class "loader" ] []
 
-                        RemoteData.Success resp ->
-                            viewPackageDetails resp
+                RemoteData.Success resp ->
+                    viewPackageDetails resp
 
-                        RemoteData.Failure httpError ->
-                            viewError (buildErrorMessage httpError)
-                   ]
+                RemoteData.Failure httpError ->
+                    viewError (buildErrorMessage httpError)
+            ]
 
 
 viewError : String -> Html Msg
