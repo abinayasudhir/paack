@@ -4,8 +4,6 @@ import Dict
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
 import Select exposing (Action(..))
-import Toasty
-import Toasty.Defaults
 
 
 type alias Url =
@@ -20,7 +18,6 @@ type Msg
     = FetchPackage
     | SelectPackage (Select.Msg Package)
     | ResponseOnFetchPackageName (WebData PackageInfo)
-    | ToastyMsg (Toasty.Msg Toasty.Defaults.Toast)
 
 
 type Package
@@ -63,5 +60,4 @@ type alias Model =
     , items : List (Select.MenuItem Package)
     , selectedPackage : Maybe Package
     , reqPackage : WebData PackageInfo
-    , toasties : Toasty.Stack Toasty.Defaults.Toast
     }

@@ -1,15 +1,12 @@
 module Home.State exposing (buildErrorMessage, init, update)
 
 import Home.Rest exposing (..)
-import Home.Toast exposing (toastResult)
 import Home.Types exposing (..)
 import Http
 import Maybe.Extra as Maybe
 import RemoteData
 import Select exposing (Action(..))
 import Task
-import Toasty
-import Toasty.Defaults
 
 
 init : () -> ( Model, Cmd Msg )
@@ -24,7 +21,6 @@ init _ =
                 ]
             , selectedPackage = Nothing
             , reqPackage = RemoteData.NotAsked
-            , toasties = Toasty.initialState
             }
     in
     ( model
@@ -53,10 +49,6 @@ update msg model =
 
         ResponseOnFetchPackageName response ->
             ( { model | reqPackage = response }, Cmd.none )
-                |> toastResult response "FetchPackage" ToastyMsg
-
-        ToastyMsg subMsg ->
-            Toasty.update Toasty.Defaults.config ToastyMsg subMsg model
 
         SelectPackage sm ->
             let
